@@ -1,4 +1,33 @@
 let result = "";
+const container = document.querySelector('#container');
+
+const start = document.createElement('button');
+start.classList.add('start');
+start.textContent = 'start';
+
+container.appendChild(start);
+
+const rock = document.createElement('button');
+rock.textContent = 'rock';
+
+const paper = document.createElement('button');
+paper.textContent = 'paper';
+
+const scissors = document.createElement('button');
+scissors.textContent = 'scissors';
+
+let playerScore = 0;
+let computerScore = 0;
+
+start.addEventListener('click', () => {
+    container.removeChild(start);
+    console.log('started game!');
+    container.appendChild(rock);
+    container.appendChild(paper);
+    container.appendChild(scissors);
+    playerScore = 0;
+    computerScore = 0;
+});
 
 function computerPlay() {
     const weapons = ["Rock", "Paper", "Scissors"];
@@ -56,29 +85,61 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function game() {
-    let playerChoice;
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        playerChoice = prompt("Rock, Paper, or Scissors?");
-        console.log(playRound(playerChoice, computerPlay()));
-        if (result == "win") {
-            playerScore++;
-        }
-        else if (result == "lose") {
-            computerScore++;
-        }
+const gameWinner = document.createElement('p');
+
+function scoreKeeper() {
+    if (result=='win') {
+        playerScore++;
     }
-    if (playerScore>computerScore) {
-        return "You win!";
-    }
-    else if (computerScore>playerScore) {
-        return "You lose.";
+    else if (result =='lose') {
+        computerScore++;
     }
     else {
-        return "Tie";
+
+    }
+    if (playerScore==5) {
+        gameWinner.classList.add('gameWinner');
+        gameWinner.textContent = 'You Win! ' + playerScore + '-' + computerScore;
+
+        container.removeChild(rock);
+        container.removeChild(paper);
+        container.removeChild(scissors);    
+        container.appendChild(gameWinner);
+
+    }
+    else if (computerScore==5) {
+        gameWinner.classList.add('gameWinner');
+        gameWinner.textContent = 'You Lose. ' + computerScore + '-' + playerScore;
+        container.appendChild(gameWinner);
+
+        container.removeChild(rock);
+        container.removeChild(paper);
+        container.removeChild(scissors);   
     }
 }
 
-console.log(game());
+const roundWinner = document.createElement('p');
+
+rock.addEventListener('click', () => { 
+    roundWinner.classList.add('roundWinner');
+    roundWinner.textContent = playRound("rock", computerPlay()) + "\nScore: " + computerScore + '-' + playerScore;
+
+    container.appendChild(roundWinner);
+    scoreKeeper();
+});
+
+paper.addEventListener('click', () => {
+    roundWinner.classList.add('roundWinner');
+    roundWinner.textContent = playRound("paper", computerPlay()) + "\nScore: " + computerScore + '-' + playerScore;
+
+    container.appendChild(roundWinner);
+    scoreKeeper();
+});
+
+scissors.addEventListener('click', () => {
+    roundWinner.classList.add('roundWinner');
+    roundWinner.textContent = playRound("scissors", computerPlay()) + "\nScore: " + computerScore + '-' + playerScore;
+
+    container.appendChild(roundWinner);
+    scoreKeeper();
+});
